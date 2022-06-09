@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import pytesseract
 import os
 import time
 
@@ -356,6 +357,16 @@ def tesseract_ocr(car_img_path):
         else:
             print('识别失败\n')
 
+# 配合pytesseract食用 需要配置Tesseract-OCR的环境变量
+def pytesseract_ocr(car_img_path):
+     print('\n函数pytesseract_ocr识别结果如下：')
+     img_cv = cv2.imread(car_img_path)
+
+     # By default OpenCV stores images in BGR format and since pytesseract assumes RGB format,
+     # we need to convert from BGR to RGB format/mode:
+     img_rgb = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
+     ret = pytesseract.image_to_string(img_rgb, lang='chi_sim')
+     print('车牌为：' + ret + '\n')
 
 if __name__ == "__main__":
     # 你要识别的图片
@@ -394,7 +405,11 @@ if __name__ == "__main__":
         character_list = split_licensePlate_character(plate_binary_img)
 
         # Tesseract-OCR 图像识别
-        tesseract_ocr(car_img_path)
+        # pytesseract_ocr(car_img_path)
+
+        text = '车牌字符处理完毕，请调用百度OCR进行文字识别！'
+        print(text)
+
 
         cv2.waitKey(0)
         cv2.destroyAllWindows()
